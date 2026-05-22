@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tip Calculator &amp; Bill Splitter</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app-wrapper">
+    <header class="app-header">
+      <div class="header-icon">
+        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="18" cy="18" r="17" stroke="currentColor" stroke-width="2"/>
+          <text x="18" y="24" text-anchor="middle" font-size="16" font-weight="700" fill="currentColor" font-family="serif">Rs</text>
+        </svg>
+      </div>
+      <div>
+        <h1 class="app-title">TipSplit</h1>
+        <p class="app-subtitle">Calculate tips &amp; split bills instantly</p>
+      </div>
+    </header>
+
+    <div class="card-grid">
+      <!-- INPUT CARD -->
+      <section class="card inputs-card" aria-label="Input section">
+
+        <!-- Bill Amount -->
+        <div class="field-group">
+          <label class="field-label" for="bill-amount">Bill Amount</label>
+          <div class="input-wrap" id="bill-wrap">
+            <span class="currency-badge">Rs</span>
+            <input
+              id="bill-amount"
+              class="field-input"
+              type="number"
+              inputmode="decimal"
+              placeholder="0.00"
+              min="0"
+              step="any"
+              autocomplete="off"
+              aria-describedby="bill-error"
+            />
+          </div>
+          <p class="field-error" id="bill-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Tip Percentage -->
+        <div class="field-group">
+          <label class="field-label">Tip Percentage</label>
+          <div class="tip-presets" role="group" aria-label="Tip preset buttons">
+            <button class="tip-btn" data-tip="10" type="button" aria-pressed="false">10%</button>
+            <button class="tip-btn" data-tip="15" type="button" aria-pressed="false">15%</button>
+            <button class="tip-btn" data-tip="20" type="button" aria-pressed="false">20%</button>
+          </div>
+          <div class="input-wrap custom-tip-wrap">
+            <input
+              id="custom-tip"
+              class="field-input"
+              type="number"
+              inputmode="decimal"
+              placeholder="Custom %"
+              min="0"
+              max="100"
+              step="any"
+              autocomplete="off"
+              aria-describedby="tip-error"
+              aria-label="Custom tip percentage"
+            />
+            <span class="suffix-badge">%</span>
+          </div>
+          <p class="field-error" id="tip-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Number of People -->
+        <div class="field-group">
+          <label class="field-label" for="num-people">Number of People</label>
+          <div class="input-wrap" id="people-wrap">
+            <span class="prefix-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" fill="currentColor" width="16" height="16">
+                <path d="M9 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zm-7 8a7 7 0 0 1 14 0H2z"/>
+                <path d="M15 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm2 2.5a5.5 5.5 0 0 1 3 4.9V18h-3v-1.5c0-1.6-.6-3.1-1.6-4.2A5.5 5.5 0 0 1 17 10.5z"/>
+              </svg>
+            </span>
+            <input
+              id="num-people"
+              class="field-input"
+              type="number"
+              inputmode="numeric"
+              placeholder="1"
+              min="1"
+              step="1"
+              autocomplete="off"
+              aria-describedby="people-error"
+            />
+          </div>
+          <p class="field-error" id="people-error" role="alert" aria-live="polite"></p>
+        </div>
+
+        <!-- Reset -->
+        <button class="reset-btn" id="reset-btn" type="button">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15" aria-hidden="true">
+            <path d="M3.5 6A7 7 0 1 1 3 10" stroke-linecap="round"/>
+            <path d="M1 4l2.5 2.5L6 4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Reset
+        </button>
+      </section>
+
+      <!-- OUTPUT CARD -->
+      <section class="card outputs-card" aria-label="Results section" aria-live="polite" aria-atomic="true">
+        <div class="result-row">
+          <div class="result-label">
+            <span class="result-icon" aria-hidden="true">✦</span>
+            Tip Amount
+          </div>
+          <div class="result-value" id="out-tip">
+            <span class="result-currency">Rs</span>
+            <span id="val-tip">—</span>
+          </div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-row result-row--grand">
+          <div class="result-label">
+            <span class="result-icon" aria-hidden="true">◈</span>
+            Grand Total
+          </div>
+          <div class="result-value result-value--grand" id="out-total">
+            <span class="result-currency">Rs</span>
+            <span id="val-total">—</span>
+          </div>
+        </div>
+        <div class="result-divider"></div>
+        <div class="result-row">
+          <div class="result-label">
+            <span class="result-icon" aria-hidden="true">◇</span>
+            Per Person
+          </div>
+          <div class="result-value result-value--person" id="out-per">
+            <span class="result-currency">Rs</span>
+            <span id="val-per">—</span>
+          </div>
+        </div>
+
+        <div class="split-visual" id="split-visual" aria-hidden="true">
+          <div class="split-bar">
+            <div class="split-bar__bill" id="split-bill-bar"></div>
+            <div class="split-bar__tip" id="split-tip-bar"></div>
+          </div>
+          <div class="split-legend">
+            <span class="legend-dot legend-dot--bill"></span><span>Bill</span>
+            <span class="legend-dot legend-dot--tip"></span><span>Tip</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
